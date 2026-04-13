@@ -1629,12 +1629,20 @@ function loadKPIView() {
 
 function printKPIs() {
   const w = state.week || AUTO_WEEK;
-  const prevW = w - 1;
   const kpi = (state.weeksKPI && state.weeksKPI[w]) || {};
 
-  const g = key => kpi[key] || 0;
-  const visitors = g('visitors'), conversion = g('conversion'), ppt = g('ppt'), prix = g('prix'), budget = g('budget');
-  const visitors_y1 = g('visitors_y1'), conversion_y1 = g('conversion_y1'), ppt_y1 = g('ppt_y1'), prix_y1 = g('prix_y1'), selling_y1 = g('selling_y1');
+  // Lire depuis les champs d'input EN PRIORITÉ, puis depuis le state sauvegardé
+  const gInput = id => parseFloat(document.getElementById(id)?.value) || kpi[id.replace('kpi-','').replace('-','_')] || 0;
+  const visitors = gInput('kpi-visitors');
+  const conversion = gInput('kpi-conversion');
+  const ppt = gInput('kpi-ppt');
+  const prix = gInput('kpi-prix');
+  const budget = gInput('kpi-budget');
+  const visitors_y1 = gInput('kpi-visitors-y1');
+  const conversion_y1 = gInput('kpi-conversion-y1');
+  const ppt_y1 = gInput('kpi-ppt-y1');
+  const prix_y1 = gInput('kpi-prix-y1');
+  const selling_y1 = gInput('kpi-selling-y1');
 
   const receipts = Math.round(visitors * conversion / 100);
   const panier = parseFloat((ppt * prix).toFixed(2));
